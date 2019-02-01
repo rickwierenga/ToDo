@@ -7,8 +7,18 @@
 //
 
 import UIKit
+import CoreData
 
 class TDMainTableViewController: UITableViewController {
+    
+    // MARK: - Properties
+    private var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
+    private var managedContext: NSManagedObjectContext = {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        return appDelegate.persistantContainer.viewContext
+    }()
+    
+    let CACHE_NAME = "todo"
     
     // MARK: - View controller life cycle
     override func viewDidLoad() {
@@ -16,6 +26,19 @@ class TDMainTableViewController: UITableViewController {
         
         self.navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .add, target: self, action: #selector(promptAdd))
         self.tableView.allowsSelection = false
+        
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TDToDo")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+        self.fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
+                                                                   managedObjectContext: managedContext,
+                                                                   sectionNameKeyPath: nil,
+                                                                   cacheName: CACHE_NAME)
+        
+        do {
+            let o = try fetchedResultsController.performFetch()
+            print(o)
+        }
+        catch {}
     }
     
     // MARK: - UI
@@ -28,39 +51,46 @@ class TDMainTableViewController: UITableViewController {
             guard let self = self else { return }
             
             if let title = ac.textFields?.first?.text {
-                self.addToDo(withTitle: title)
+                self.addToDo(withName: title)
             }
         }))
         present(ac, animated: true)
     }
     
     // MARK: - ToDo actions
-    private func addToDo(withTitle title: String) {
+    private func addToDo(withName name: String) {
+        let todo = TDToDo(context: managedContext)
+        todo.name = name
+        todo.isDone = false
+        
+        do {
+            try managedContext.save()
+            try fetchedResultsController.performFetch()
+            self.tableView.reloadData()
+        }
+        catch {
+            // display error
+        }
         
     }
     
     // MARK: - Table view
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        guard let sections = self.fetchedResultsController?.sections else {
+            fatalError("No sections in fetchedResultsController")
+        }
+        
+        let sectionInfo = sections[section]
+        return sectionInfo.numberOfObjects
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "todo", for: indexPath) as! TDToDoTableViewCell
-       
-        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-            let managedContext = appDelegate.persistantContainer.viewContext
-            
-            // -- get todo from fetchre... thing
-            let todo = TDToDo(context: managedContext)
-            todo.name = "Test \(indexPath.row)"
-            todo.isDone = false
-            // --
-            
-            cell.todo = todo
-            
-            return cell
+        guard let object = fetchedResultsController?.object(at: indexPath),
+            let todo = object as? TDToDo else {
+                fatalError("Attempt to configure cell without a managed object")
         }
-        
+        cell.todo = todo
         return cell
     }
     
