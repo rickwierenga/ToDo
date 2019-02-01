@@ -8,20 +8,30 @@
 
 /* Begin PBXBuildFile section */
 		588F408722048F3A009C3B20 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 588F408622048F3A009C3B20 /* AppDelegate.swift */; };
-		588F408922048F3A009C3B20 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 588F408822048F3A009C3B20 /* ViewController.swift */; };
 		588F408C22048F3A009C3B20 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 588F408A22048F3A009C3B20 /* Main.storyboard */; };
 		588F408E22048F3C009C3B20 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 588F408D22048F3C009C3B20 /* Assets.xcassets */; };
 		588F409122048F3C009C3B20 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 588F408F22048F3C009C3B20 /* LaunchScreen.storyboard */; };
+		588F409A22049070009C3B20 /* ToDo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 588F409822049070009C3B20 /* ToDo.xcdatamodeld */; };
+		588F40A1220490D8009C3B20 /* TDToDo+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 588F409F220490D8009C3B20 /* TDToDo+CoreDataClass.swift */; };
+		588F40A2220490D8009C3B20 /* TDToDo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 588F40A0220490D8009C3B20 /* TDToDo+CoreDataProperties.swift */; };
+		588F40A82204914A009C3B20 /* TDMainTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 588F40A72204914A009C3B20 /* TDMainTableViewController.swift */; };
+		588F40AA2204927C009C3B20 /* TDTickView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 588F40A92204927C009C3B20 /* TDTickView.swift */; };
+		588F40AE2204B1DB009C3B20 /* TDToDoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 588F40AD2204B1DB009C3B20 /* TDToDoTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		588F408322048F3A009C3B20 /* ToDo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		588F408622048F3A009C3B20 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		588F408822048F3A009C3B20 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		588F408B22048F3A009C3B20 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		588F408D22048F3C009C3B20 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		588F409022048F3C009C3B20 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		588F409222048F3C009C3B20 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		588F409922049070009C3B20 /* ToDo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ToDo.xcdatamodel; sourceTree = "<group>"; };
+		588F409F220490D8009C3B20 /* TDToDo+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TDToDo+CoreDataClass.swift"; sourceTree = "<group>"; };
+		588F40A0220490D8009C3B20 /* TDToDo+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TDToDo+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		588F40A72204914A009C3B20 /* TDMainTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDMainTableViewController.swift; sourceTree = "<group>"; };
+		588F40A92204927C009C3B20 /* TDTickView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDTickView.swift; sourceTree = "<group>"; };
+		588F40AD2204B1DB009C3B20 /* TDToDoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDToDoTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,14 +64,51 @@
 		588F408522048F3A009C3B20 /* ToDo */ = {
 			isa = PBXGroup;
 			children = (
-				588F408622048F3A009C3B20 /* AppDelegate.swift */,
-				588F408822048F3A009C3B20 /* ViewController.swift */,
-				588F408A22048F3A009C3B20 /* Main.storyboard */,
-				588F408D22048F3C009C3B20 /* Assets.xcassets */,
-				588F408F22048F3C009C3B20 /* LaunchScreen.storyboard */,
+				588F40A622049107009C3B20 /* Views */,
+				588F40A5220490F2009C3B20 /* Controllers */,
+				588F40A4220490EA009C3B20 /* Resources */,
+				588F40A3220490E2009C3B20 /* Models */,
 				588F409222048F3C009C3B20 /* Info.plist */,
 			);
 			path = ToDo;
+			sourceTree = "<group>";
+		};
+		588F40A3220490E2009C3B20 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				588F409F220490D8009C3B20 /* TDToDo+CoreDataClass.swift */,
+				588F40A0220490D8009C3B20 /* TDToDo+CoreDataProperties.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		588F40A4220490EA009C3B20 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				588F408D22048F3C009C3B20 /* Assets.xcassets */,
+				588F409822049070009C3B20 /* ToDo.xcdatamodeld */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		588F40A5220490F2009C3B20 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				588F408622048F3A009C3B20 /* AppDelegate.swift */,
+				588F40A72204914A009C3B20 /* TDMainTableViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		588F40A622049107009C3B20 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				588F408A22048F3A009C3B20 /* Main.storyboard */,
+				588F40A92204927C009C3B20 /* TDTickView.swift */,
+				588F40AD2204B1DB009C3B20 /* TDToDoTableViewCell.swift */,
+				588F408F22048F3C009C3B20 /* LaunchScreen.storyboard */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -135,8 +182,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				588F408922048F3A009C3B20 /* ViewController.swift in Sources */,
+				588F40AA2204927C009C3B20 /* TDTickView.swift in Sources */,
+				588F40A2220490D8009C3B20 /* TDToDo+CoreDataProperties.swift in Sources */,
+				588F40A82204914A009C3B20 /* TDMainTableViewController.swift in Sources */,
+				588F409A22049070009C3B20 /* ToDo.xcdatamodeld in Sources */,
 				588F408722048F3A009C3B20 /* AppDelegate.swift in Sources */,
+				588F40AE2204B1DB009C3B20 /* TDToDoTableViewCell.swift in Sources */,
+				588F40A1220490D8009C3B20 /* TDToDo+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -336,6 +388,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		588F409822049070009C3B20 /* ToDo.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				588F409922049070009C3B20 /* ToDo.xcdatamodel */,
+			);
+			currentVersion = 588F409922049070009C3B20 /* ToDo.xcdatamodel */;
+			path = ToDo.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 588F407B22048F3A009C3B20 /* Project object */;
 }

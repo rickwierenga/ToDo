@@ -17,7 +17,7 @@ extension TDToDo {
         return NSFetchRequest<TDToDo>(entityName: "TDToDo")
     }
 
-    @NSManaged public var done: Bool
+    @NSManaged public var isDone: Bool
     @NSManaged public var name: String?
 
 }
