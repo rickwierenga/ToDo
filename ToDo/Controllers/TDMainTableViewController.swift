@@ -108,6 +108,9 @@ class TDMainTableViewController: UITableViewController {
                 return UITableViewCell(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         }
         cell.todo = todo
+        cell.tickAction = { _ in
+            self.update()
+        }
         return cell
     }
     
