@@ -34,12 +34,7 @@ class TDMainTableViewController: UITableViewController {
                                                                    sectionNameKeyPath: nil,
                                                                    cacheName: CACHE_NAME)
         
-        do {
-            try fetchedResultsController.performFetch()
-        }
-        catch {
-            internalError(userDescription: error.localizedDescription)
-        }
+        update()
     }
     
     // MARK: - UI
@@ -152,6 +147,24 @@ class TDMainTableViewController: UITableViewController {
         }
         catch {
             internalError(userDescription: error.localizedDescription)
+        }
+        
+        self.navigationItem.title = "ToDo's (\(numberOfUncompletedItems))"
+    }
+    
+    var numberOfUncompletedItems: UInt {
+        get {
+            let fetchRequest = NSFetchRequest<TDToDo>()
+            fetchRequest.entity = NSEntityDescription.entity(forEntityName: "TDToDo", in: managedContext)
+            fetchRequest.predicate = NSPredicate(format: "isDone == FALSE")
+            do {
+                let items = try managedContext.fetch(fetchRequest)
+                return UInt(items.count)
+            }
+            catch {
+                internalError(userDescription: error.localizedDescription)
+            }
+            return 0
         }
     }
 }
