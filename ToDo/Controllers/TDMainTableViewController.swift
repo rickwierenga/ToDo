@@ -26,8 +26,10 @@ class TDMainTableViewController: UITableViewController {
         
         let infoButton = UIButton(type: .infoLight)
         infoButton.addTarget(self, action: #selector(info), for: .touchUpInside)
-        self.navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .add, target: self, action: #selector(promptAdd))
         self.navigationItem.leftBarButtonItem = .init(customView: infoButton)
+        let add = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(promptAdd))
+        let delete = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(askDeleteCompleted))
+        self.navigationItem.rightBarButtonItems = [add, delete]
         
         self.tableView.allowsSelection = false
         
@@ -45,7 +47,7 @@ class TDMainTableViewController: UITableViewController {
     @objc private func info() {
         let ac = UIAlertController(title: "ToDo", message: "ToDo is a simple open-source productivity app first created by Rick Wierenga. \n\n ©2019 Rick Wierenga", preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "Close", style: .cancel, handler: nil))
-        ac.addAction(UIAlertAction(title: "View GitHub", style: .default, handler: { _ in
+        ac.addAction(UIAlertAction(title: "GitHub", style: .default, handler: { _ in
             UIApplication.shared.open(URL(string: "https://github.com/rickwierenga/ToDo")!, options: [:], completionHandler: nil)
         }))
         present(ac, animated: true)
@@ -86,6 +88,16 @@ class TDMainTableViewController: UITableViewController {
         present(ac, animated: true)
     }
     
+    @objc private func askDeleteCompleted() {
+        let ac = UIAlertController(title: "Delete all completed items?", message: nil, preferredStyle: .actionSheet)
+        ac.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { [weak self] _ in
+            guard let self = self else { return }
+            self.deleteCompleted()
+        }))
+        ac.addAction(UIAlertAction(title: "No", style: .default, handler: nil))
+        present(ac, animated: true)
+    }
+    
     // MARK: - ToDo actions
     private func addToDo(withName name: String) {
         let todo = TDToDo(context: managedContext)
@@ -94,9 +106,17 @@ class TDMainTableViewController: UITableViewController {
         update()
     }
     
-    private func deleteToDo(_ todo: TDToDo) {
-        self.managedContext.delete(todo)
+    private func deleteObject(_ object: NSManagedObject) {
+        self.managedContext.delete(object)
         self.update()
+    }
+    
+    @objc private func deleteCompleted() {
+        if let todos = fetchedResultsController.fetchedObjects as? [TDToDo] {
+            for todo in todos where todo.isDone {
+                deleteObject(todo)
+            }
+        }
     }
     
     // MARK: - Table view
@@ -135,8 +155,8 @@ class TDMainTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let delete = UITableViewRowAction(style: .destructive, title: "Delete") { [weak self] (action, indexPath) in
             guard let self = self else { return }
-            if let todo = self.fetchedResultsController.object(at: indexPath) as? TDToDo {
-                self.deleteToDo(todo)
+            if let object = self.fetchedResultsController.object(at: indexPath) as? NSManagedObject {
+                self.deleteObject(object)
             }
         }
         
