@@ -35,8 +35,7 @@ class TDMainTableViewController: UITableViewController {
                                                                    cacheName: CACHE_NAME)
         
         do {
-            let o = try fetchedResultsController.performFetch()
-            print(o)
+            try fetchedResultsController.performFetch()
         }
         catch {}
     }
@@ -68,16 +67,7 @@ class TDMainTableViewController: UITableViewController {
         let todo = TDToDo(context: managedContext)
         todo.name = name
         todo.isDone = false
-        
-        do {
-            try managedContext.save()
-            try fetchedResultsController.performFetch()
-            self.tableView.reloadData()
-        }
-        catch {
-            internalError(userDescription: error.localizedDescription)
-        }
-        
+        update()
     }
     
     // MARK: - Table view
@@ -105,4 +95,36 @@ class TDMainTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
     }
+    
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        switch editingStyle {
+        case .delete:
+            if let object = fetchedResultsController.object(at: indexPath) as? NSManagedObject {
+                managedContext.delete(object)
+                update(reloadData: false)
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+            }
+        default:
+            break
+        }
+    }
+    
+    // MARK: - Helpers
+    func update(reloadData: Bool = true) {
+        do {
+            try managedContext.save()
+            try fetchedResultsController.performFetch()
+            if reloadData {
+                self.tableView.reloadData()
+            }
+        }
+        catch {
+            internalError(userDescription: error.localizedDescription)
+        }
+    }
 }
+
