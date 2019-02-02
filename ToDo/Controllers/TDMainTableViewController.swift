@@ -37,7 +37,9 @@ class TDMainTableViewController: UITableViewController {
         do {
             try fetchedResultsController.performFetch()
         }
-        catch {}
+        catch {
+            internalError(userDescription: error.localizedDescription)
+        }
     }
     
     // MARK: - UI
