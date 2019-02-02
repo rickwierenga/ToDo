@@ -24,7 +24,11 @@ class TDMainTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let infoButton = UIButton(type: .infoLight)
+        infoButton.addTarget(self, action: #selector(info), for: .touchUpInside)
         self.navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .add, target: self, action: #selector(promptAdd))
+        self.navigationItem.leftBarButtonItem = .init(customView: infoButton)
+        
         self.tableView.allowsSelection = false
         
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TDToDo")
@@ -38,6 +42,15 @@ class TDMainTableViewController: UITableViewController {
     }
     
     // MARK: - UI
+    @objc private func info() {
+        let ac = UIAlertController(title: "ToDo", message: "ToDo is a simple open-source productivity app first created by Rick Wierenga. \n\n ©2019 Rick Wierenga", preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Close", style: .cancel, handler: nil))
+        ac.addAction(UIAlertAction(title: "View GitHub", style: .default, handler: { _ in
+            UIApplication.shared.open(URL(string: "https://github.com/rickwierenga/ToDo")!, options: [:], completionHandler: nil)
+        }))
+        present(ac, animated: true)
+    }
+    
     @objc private func promptAdd() {
         prompt(todo: nil)
     }
