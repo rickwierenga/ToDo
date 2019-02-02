@@ -57,6 +57,12 @@ class TDMainTableViewController: UITableViewController {
         present(ac, animated: true)
     }
     
+    private func internalError(userDescription: String?) {
+        let ac = UIAlertController(title: "Internal Error Occured", message: userDescription, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(ac, animated: true)
+    }
+    
     // MARK: - ToDo actions
     private func addToDo(withName name: String) {
         let todo = TDToDo(context: managedContext)
@@ -69,7 +75,7 @@ class TDMainTableViewController: UITableViewController {
             self.tableView.reloadData()
         }
         catch {
-            // display error
+            internalError(userDescription: error.localizedDescription)
         }
         
     }
@@ -77,7 +83,8 @@ class TDMainTableViewController: UITableViewController {
     // MARK: - Table view
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let sections = self.fetchedResultsController?.sections else {
-            fatalError("No sections in fetchedResultsController")
+            internalError(userDescription: nil)
+            return 0
         }
         
         let sectionInfo = sections[section]
@@ -88,7 +95,8 @@ class TDMainTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "todo", for: indexPath) as! TDToDoTableViewCell
         guard let object = fetchedResultsController?.object(at: indexPath),
             let todo = object as? TDToDo else {
-                fatalError("Attempt to configure cell without a managed object")
+                internalError(userDescription: nil)
+                return UITableViewCell(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         }
         cell.todo = todo
         return cell
