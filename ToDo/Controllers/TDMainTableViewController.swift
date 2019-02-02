@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import ConfettiView
 
 class TDMainTableViewController: UITableViewController {
     
@@ -140,6 +141,18 @@ class TDMainTableViewController: UITableViewController {
         cell.todo = todo
         cell.tickAction = { _ in
             self.update()
+            if self.numberOfUncompletedItems == 0 {
+                let confettieView = ConfettiView()
+                confettieView.frame = self.view.frame
+                self.view.addSubview(confettieView)
+                confettieView.startAnimating()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    confettieView.stopAnimating()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                        confettieView.removeFromSuperview()
+                    }
+                }
+            }
         }
         return cell
     }
