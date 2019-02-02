@@ -42,15 +42,29 @@ class TDMainTableViewController: UITableViewController {
     
     // MARK: - UI
     @objc private func promptAdd() {
+        prompt(todo: nil)
+    }
+    
+    private func prompt(todo: TDToDo?) {
         let ac = UIAlertController(title: "Add ToDo", message: nil, preferredStyle: .alert)
         ac.addTextField { textField in
-            textField.placeholder = "Buy Groceries"
+            if let todo = todo {
+                textField.text = todo.name
+            } else {
+                textField.placeholder = "Buy Groceries"
+            }
         }
         ac.addAction(UIAlertAction(title: "Add", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
             
-            if let title = ac.textFields?.first?.text {
-                self.addToDo(withName: title)
+            if let name = ac.textFields?.first?.text {
+                if let todo = todo {
+                    todo.name = name
+                    self.update()
+                } else {
+                    self.addToDo(withName: name)
+
+                }
             }
         }))
         present(ac, animated: true)
@@ -68,6 +82,11 @@ class TDMainTableViewController: UITableViewController {
         todo.name = name
         todo.isDone = false
         update()
+    }
+    
+    private func deleteToDo(_ todo: TDToDo) {
+        self.managedContext.delete(todo)
+        self.update()
     }
     
     // MARK: - Table view
@@ -100,27 +119,31 @@ class TDMainTableViewController: UITableViewController {
         return true
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        switch editingStyle {
-        case .delete:
-            if let object = fetchedResultsController.object(at: indexPath) as? NSManagedObject {
-                managedContext.delete(object)
-                update(reloadData: false)
-                tableView.deleteRows(at: [indexPath], with: .automatic)
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let delete = UITableViewRowAction(style: .destructive, title: "Delete") { [weak self] (action, indexPath) in
+            guard let self = self else { return }
+            if let todo = self.fetchedResultsController.object(at: indexPath) as? TDToDo {
+                self.deleteToDo(todo)
             }
-        default:
-            break
         }
+        
+        let edit = UITableViewRowAction(style: .normal, title: "Edit") { (action, indexPath) in
+            if let todo = self.fetchedResultsController.object(at: indexPath) as? TDToDo {
+                self.prompt(todo: todo)
+            }
+        }
+        
+        edit.backgroundColor = UIColor.blue
+        
+        return [delete, edit]
     }
     
     // MARK: - Helpers
-    func update(reloadData: Bool = true) {
+    func update() {
         do {
             try managedContext.save()
             try fetchedResultsController.performFetch()
-            if reloadData {
-                self.tableView.reloadData()
-            }
+            self.tableView.reloadData()
         }
         catch {
             internalError(userDescription: error.localizedDescription)
