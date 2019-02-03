@@ -10,6 +10,11 @@ Installation is super easy. Just clone the project:
 $ git clone https://github.com/rickwierenga/ToDo.git
 ```
 
+## Features
+- [X] Core Data persistance
+- [X] iOS app
+- [ ] macOS app
+
 ## What I learned
 * Core Data
 * NSFetchedResultController
