@@ -1,0 +1,16 @@
+PODS:
+  - ConfettiView (0.1.7)
+
+DEPENDENCIES:
+  - ConfettiView
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - ConfettiView
+
+SPEC CHECKSUMS:
+  ConfettiView: e70aa9be11d778d2c2778429aad92fa6f5d9c6e7
+
+PODFILE CHECKSUM: 0ec77bfe38158e604bbff280cf061af0d603781f
+
+COCOAPODS: 1.5.3
