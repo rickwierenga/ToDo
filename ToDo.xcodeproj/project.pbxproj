@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		08F17B29F4E84E9912C1B71A /* Pods_ToDo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C33B95A6A9E4565F87F366A5 /* Pods_ToDo.framework */; };
 		588F408722048F3A009C3B20 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 588F408622048F3A009C3B20 /* AppDelegate.swift */; };
 		588F408C22048F3A009C3B20 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 588F408A22048F3A009C3B20 /* Main.storyboard */; };
 		588F408E22048F3C009C3B20 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 588F408D22048F3C009C3B20 /* Assets.xcassets */; };
@@ -21,7 +20,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		439A1619AE184FC7513C95D4 /* Pods-ToDo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ToDo.release.xcconfig"; path = "Pods/Target Support Files/Pods-ToDo/Pods-ToDo.release.xcconfig"; sourceTree = "<group>"; };
 		588F408322048F3A009C3B20 /* ToDo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		588F408622048F3A009C3B20 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		588F408B22048F3A009C3B20 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -34,8 +32,6 @@
 		588F40A72204914A009C3B20 /* TDMainTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDMainTableViewController.swift; sourceTree = "<group>"; };
 		588F40A92204927C009C3B20 /* TDTickView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDTickView.swift; sourceTree = "<group>"; };
 		588F40AD2204B1DB009C3B20 /* TDToDoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDToDoTableViewCell.swift; sourceTree = "<group>"; };
-		C33B95A6A9E4565F87F366A5 /* Pods_ToDo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ToDo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		DEE97F5CF9306AE7CA41316D /* Pods-ToDo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ToDo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ToDo/Pods-ToDo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,29 +39,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				08F17B29F4E84E9912C1B71A /* Pods_ToDo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2EA9CEF6B9F4D1E8CD06DC68 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				DEE97F5CF9306AE7CA41316D /* Pods-ToDo.debug.xcconfig */,
-				439A1619AE184FC7513C95D4 /* Pods-ToDo.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 		588F407A22048F3A009C3B20 = {
 			isa = PBXGroup;
 			children = (
 				588F408522048F3A009C3B20 /* ToDo */,
 				588F408422048F3A009C3B20 /* Products */,
-				2EA9CEF6B9F4D1E8CD06DC68 /* Pods */,
-				6D7301E6C21F933492945CB7 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -125,14 +109,6 @@
 				588F408F22048F3C009C3B20 /* LaunchScreen.storyboard */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		6D7301E6C21F933492945CB7 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				C33B95A6A9E4565F87F366A5 /* Pods_ToDo.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -405,7 +381,6 @@
 		};
 		588F409622048F3C009C3B20 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DEE97F5CF9306AE7CA41316D /* Pods-ToDo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -424,7 +399,6 @@
 		};
 		588F409722048F3C009C3B20 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 439A1619AE184FC7513C95D4 /* Pods-ToDo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
