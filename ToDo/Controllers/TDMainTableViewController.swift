@@ -8,7 +8,6 @@
 
 import UIKit
 import CoreData
-import ConfettiView
 
 class TDMainTableViewController: UITableViewController {
     
@@ -18,19 +17,29 @@ class TDMainTableViewController: UITableViewController {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.persistantContainer.viewContext
     }()
+    var numberOfUncompletedItems: UInt {
+        get {
+            let fetchRequest = NSFetchRequest<TDToDo>()
+            fetchRequest.entity = NSEntityDescription.entity(forEntityName: "TDToDo", in: managedContext)
+            fetchRequest.predicate = NSPredicate(format: "isDone == FALSE")
+            do {
+                let items = try managedContext.fetch(fetchRequest)
+                return UInt(items.count)
+            }
+            catch {
+                internalError(userDescription: error.localizedDescription)
+            }
+            return 0
+        }
+    }
     
-    let CACHE_NAME = "todo"
+    fileprivate let CACHE_NAME = "todo"
     
     // MARK: - View controller life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let infoButton = UIButton(type: .infoLight)
-        infoButton.addTarget(self, action: #selector(info), for: .touchUpInside)
-        self.navigationItem.leftBarButtonItem = .init(customView: infoButton)
-        let add = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(promptAdd))
-        let delete = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(askDeleteCompleted))
-        self.navigationItem.rightBarButtonItems = [add, delete]
+        addBarButtonItems()
         
         self.tableView.allowsSelection = false
         
@@ -41,11 +50,20 @@ class TDMainTableViewController: UITableViewController {
                                                                    sectionNameKeyPath: nil,
                                                                    cacheName: CACHE_NAME)
         
-        update()
+        reloadData()
+    }
+    
+    func addBarButtonItems() {
+        let infoButton = UIButton(type: .infoLight)
+        infoButton.addTarget(self, action: #selector(info), for: .touchUpInside)
+        self.navigationItem.leftBarButtonItem = .init(customView: infoButton)
+        let add = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(promptAdd))
+        let delete = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(askDeleteCompleted))
+        self.navigationItem.rightBarButtonItems = [add, delete]
     }
     
     // MARK: - UI
-    @objc private func info() {
+    @objc func info() {
         let ac = UIAlertController(title: "ToDo", message: "ToDo is a simple open-source productivity app first created by Rick Wierenga. \n\n ©2019 Rick Wierenga", preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "Close", style: .cancel, handler: nil))
         ac.addAction(UIAlertAction(title: "GitHub", style: .default, handler: { _ in
@@ -54,11 +72,11 @@ class TDMainTableViewController: UITableViewController {
         present(ac, animated: true)
     }
     
-    @objc private func promptAdd() {
+    @objc func promptAdd() {
         prompt(todo: nil)
     }
     
-    private func prompt(todo: TDToDo?) {
+    func prompt(todo: TDToDo?) {
         let ac = UIAlertController(title: "Add ToDo", message: nil, preferredStyle: .alert)
         ac.addTextField { textField in
             if let todo = todo {
@@ -73,19 +91,13 @@ class TDMainTableViewController: UITableViewController {
             if let name = ac.textFields?.first?.text {
                 if let todo = todo {
                     todo.name = name
-                    self.update()
+                    self.reloadData()
                 } else {
                     self.addToDo(withName: name)
 
                 }
             }
         }))
-        present(ac, animated: true)
-    }
-    
-    private func internalError(userDescription: String?) {
-        let ac = UIAlertController(title: "Internal Error Occured", message: userDescription, preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         present(ac, animated: true)
     }
     
@@ -99,17 +111,24 @@ class TDMainTableViewController: UITableViewController {
         present(ac, animated: true)
     }
     
+    // MARK: - User interface helpers
+    fileprivate func internalError(userDescription: String?) {
+        let ac = UIAlertController(title: "Internal Error Occured", message: userDescription, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(ac, animated: true)
+    }
+    
     // MARK: - ToDo actions
     private func addToDo(withName name: String) {
         let todo = TDToDo(context: managedContext)
         todo.name = name
         todo.isDone = false
-        update()
+        reloadData()
     }
     
     private func deleteObject(_ object: NSManagedObject) {
         self.managedContext.delete(object)
-        self.update()
+        self.reloadData()
     }
     
     @objc private func deleteCompleted() {
@@ -117,6 +136,29 @@ class TDMainTableViewController: UITableViewController {
             for todo in todos where todo.isDone {
                 deleteObject(todo)
             }
+        }
+    }
+    
+    func reloadData() {
+        do {
+            save()
+            
+            try fetchedResultsController.performFetch()
+            self.tableView.reloadData()
+        }
+        catch {
+            internalError(userDescription: error.localizedDescription)
+        }
+        
+        self.navigationItem.title = "ToDo's (\(numberOfUncompletedItems))"
+    }
+    
+    func save() {
+        do {
+            try managedContext.save()
+        }
+        catch {
+            internalError(userDescription: error.localizedDescription)
         }
     }
     
@@ -140,20 +182,7 @@ class TDMainTableViewController: UITableViewController {
         }
         cell.todo = todo
         cell.tickAction = { _ in
-            self.update()
-            
-            if self.numberOfUncompletedItems == 0 {
-                let confettieView = ConfettiView()
-                confettieView.frame = self.view.frame
-                self.view.addSubview(confettieView)
-                confettieView.startAnimating()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    confettieView.stopAnimating()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                        confettieView.removeFromSuperview()
-                    }
-                }
-            }
+            self.reloadData()
         }
         return cell
     }
@@ -184,35 +213,4 @@ class TDMainTableViewController: UITableViewController {
         
         return [delete, edit]
     }
-    
-    // MARK: - Helpers
-    func update() {
-        do {
-            try managedContext.save()
-            try fetchedResultsController.performFetch()
-            self.tableView.reloadData()
-        }
-        catch {
-            internalError(userDescription: error.localizedDescription)
-        }
-        
-        self.navigationItem.title = "ToDo's (\(numberOfUncompletedItems))"
-    }
-    
-    var numberOfUncompletedItems: UInt {
-        get {
-            let fetchRequest = NSFetchRequest<TDToDo>()
-            fetchRequest.entity = NSEntityDescription.entity(forEntityName: "TDToDo", in: managedContext)
-            fetchRequest.predicate = NSPredicate(format: "isDone == FALSE")
-            do {
-                let items = try managedContext.fetch(fetchRequest)
-                return UInt(items.count)
-            }
-            catch {
-                internalError(userDescription: error.localizedDescription)
-            }
-            return 0
-        }
-    }
 }
-

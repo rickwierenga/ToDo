@@ -11,7 +11,6 @@ import UIKit
 class TDTickView: UIControl {
     
     // MARK: - Properties
-    var label: UILabel!
     public var isDone = false {
         didSet {
             self.setNeedsDisplay()
